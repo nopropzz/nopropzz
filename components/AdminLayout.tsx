@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { 
@@ -39,8 +38,8 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ onLogout, user }) => {
       {/* Sidebar */}
       <aside className="w-64 bg-white border-r-2 border-black flex flex-col">
         <div className="p-8 border-b-2 border-black">
-          <Link to="/" className="text-xl font-black tracking-tighter">
-            NOPROPZZ <span className="text-[10px] font-normal opacity-50">ADMIN</span>
+          <Link to="/" className="text-xl font-black tracking-tighter normal-case">
+            noPROPZZ <span className="text-[10px] font-normal opacity-50 uppercase">ADMIN</span>
           </Link>
         </div>
 

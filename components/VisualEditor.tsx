@@ -1,5 +1,5 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { Save, Edit3, Eye, Database, Code, CheckCircle } from 'lucide-react';
+import React, { createContext, useContext, useState, useEffect, ReactNode, useRef } from 'react';
+import { Save, Edit3, Eye, Database, CheckCircle, Image as ImageIcon, Upload } from 'lucide-react';
 
 interface VisualEditorContextType {
   isEditing: boolean;
@@ -22,7 +22,6 @@ export const VisualEditorProvider: React.FC<{ children: ReactNode }> = ({ childr
   const [contentMap, setContentMap] = useState<Record<string, string>>({});
   const [status, setStatus] = useState<'idle' | 'saving' | 'saved'>('idle');
 
-  // Load initial state from local storage
   useEffect(() => {
     const saved = localStorage.getItem('nopropzz_edits');
     if (saved) setContentMap(JSON.parse(saved));
@@ -44,7 +43,7 @@ export const VisualEditorProvider: React.FC<{ children: ReactNode }> = ({ childr
     setTimeout(() => {
       setStatus('saved');
       setTimeout(() => setStatus('idle'), 2000);
-    }, 8000); // Cinematic save time for brutalist feel
+    }, 1000);
   };
 
   return (
@@ -62,13 +61,13 @@ export const VisualEditorProvider: React.FC<{ children: ReactNode }> = ({ childr
             {status === 'saving' && (
               <div className="flex items-center space-x-3 text-[10px] font-mono opacity-50">
                 <Database size={14} className="animate-spin" />
-                <span>SYNCING_WITH_FLOWEN_AI_OS...</span>
+                <span>SYNCING_STORAGE...</span>
               </div>
             )}
             {status === 'saved' && (
               <div className="flex items-center space-x-2 text-green-400 text-[10px] font-black">
                 <CheckCircle size={14} />
-                <span>MANIFEST_COMMITTED</span>
+                <span>CHANGES_COMMITTED</span>
               </div>
             )}
           </div>
@@ -90,7 +89,7 @@ export const VisualEditorProvider: React.FC<{ children: ReactNode }> = ({ childr
                 className="px-6 py-2 bg-white text-black text-[10px] font-black uppercase tracking-widest border-2 border-white hover:bg-zinc-200 transition-all flex items-center space-x-2"
               >
                 <Save size={14} />
-                <span>COMMIT_EDITS</span>
+                <span>SAVE_ALL_EDITS</span>
               </button>
             )}
           </div>
@@ -104,15 +103,12 @@ interface EditableProps {
   id: string;
   defaultText: string;
   className?: string;
-  // Use React.ElementType instead of keyof JSX.IntrinsicElements to avoid namespace errors
   as?: React.ElementType;
 }
 
 export const Editable: React.FC<EditableProps> = ({ id, defaultText, className = '', as: Component = 'span' }) => {
   const { isEditing, getContent, updateContent } = useVisualEditor();
   const text = getContent(id, defaultText);
-
-  // Use a capitalized variable for dynamic tag rendering and cast to any to satisfy JSX constraints for Dynamic Components
   const Tag = Component as any;
 
   if (!isEditing) {
@@ -128,5 +124,77 @@ export const Editable: React.FC<EditableProps> = ({ id, defaultText, className =
     >
       {text}
     </Tag>
+  );
+};
+
+interface EditableImageProps {
+  id: string;
+  defaultSrc: string;
+  alt?: string;
+  className?: string;
+}
+
+export const EditableImage: React.FC<EditableImageProps> = ({ id, defaultSrc, alt = '', className = '' }) => {
+  const { isEditing, getContent, updateContent } = useVisualEditor();
+  const src = getContent(id, defaultSrc);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleImageClick = (e: React.MouseEvent) => {
+    if (!isEditing) return;
+    e.preventDefault();
+    e.stopPropagation();
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64String = reader.result as string;
+        updateContent(id, base64String);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleManualUrl = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    const newUrl = window.prompt('OR ENTER IMAGE URL:', src);
+    if (newUrl !== null && newUrl.trim() !== '') {
+      updateContent(id, newUrl.trim());
+    }
+  };
+
+  return (
+    <div className={`relative w-full h-full ${isEditing ? 'group' : ''}`}>
+      <input 
+        type="file" 
+        ref={fileInputRef} 
+        className="hidden" 
+        accept="image/*" 
+        onChange={handleFileChange}
+      />
+      <img 
+        src={src} 
+        alt={alt} 
+        className={`${className} ${isEditing ? 'cursor-pointer ring-4 ring-dashed ring-black/30 ring-inset' : ''}`}
+        onClick={handleImageClick}
+      />
+      {isEditing && (
+        <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity bg-black/40 gap-4">
+          <div className="bg-white text-black p-4 brutalist-border flex items-center gap-3 brutalist-shadow pointer-events-auto">
+            <Upload size={20} />
+            <span className="text-[10px] font-black uppercase tracking-widest">UPLOAD_PHOTO</span>
+          </div>
+          <button 
+            onClick={handleManualUrl}
+            className="text-[9px] text-white font-mono uppercase underline tracking-widest pointer-events-auto hover:opacity-100 opacity-60 transition-opacity"
+          >
+            or_use_external_url
+          </button>
+        </div>
+      )}
+    </div>
   );
 };

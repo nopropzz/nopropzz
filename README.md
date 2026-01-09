@@ -1,20 +1,37 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# noPROPZZ / PROJECT_MANIFESTO
+**STATUS: PRODUCTION_READY_V1.4**
 
-# Run and deploy your AI Studio app
+## 01. VISION
+noPROPZZ is a high-impact digital presence for a Scandinavian creative agency. Built on the principles of **Nordic Brutalism**, it rejects filler in favor of raw material, structural honesty, and high-fidelity storytelling.
 
-This contains everything you need to run your app locally.
+## 02. FEATURES
+- **Build Mode**: Visual editing of text and images directly in the browser.
+- **Local Persistence**: Edits are stored in `localStorage` until committed.
+- **Brutalist UI**: High-contrast monochrome aesthetic with Archivo & Courier Prime typography.
+- **Global Roster**: Integrated shop, portfolio, and talent management systems.
 
-View your app in AI Studio: https://ai.studio/apps/drive/1VXn5CwqK0CqDZ-Q0-l7iVkmWQKKSRjjs
+## 03. TECH STACK
+- **Framework**: React 19 + TypeScript
+- **Styling**: Tailwind CSS
+- **Motion**: Framer Motion
+- **Icons**: Lucide React
 
-## Run Locally
+## 04. DEPLOYMENT (RECOMMENDED)
+1. **Host**: [Vercel](https://vercel.com) (Optimized for React/Vite performance).
+2. **Database**: [Supabase](https://supabase.com) (PostgreSQL for project/shop data).
+3. **Storage**: [Cloudinary](https://cloudinary.com) (Dynamic B&W image optimization).
 
-**Prerequisites:**  Node.js
+## 05. SETUP_CMD
+```bash
+# Clone the repository
+git clone https://github.com/your-username/nopropzz-web.git
 
+# Install dependencies
+npm install
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+# Start local engine
+npm run dev
+```
+
+---
+*© 2026 noPROPZZ / ESTONIA / 38.9681° N, 9.4073° W*

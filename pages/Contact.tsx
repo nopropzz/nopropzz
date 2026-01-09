@@ -27,9 +27,9 @@ const Contact: React.FC = () => {
               <label className="text-xs font-bold uppercase tracking-[0.3em]">Interest</label>
               <select className="w-full border-b-2 border-black py-5 text-base font-bold focus:outline-none uppercase appearance-none bg-transparent">
                 <option>New Project Inquiry</option>
+                <option>Artist Application</option>
                 <option>Talent Application</option>
                 <option>Press & Media</option>
-                <option>Location Scouting</option>
               </select>
             </div>
 
@@ -51,7 +51,7 @@ const Contact: React.FC = () => {
               <div className="flex items-start space-x-8">
                 <MapPin size={24} />
                 <p className="text-sm font-mono uppercase leading-loose font-bold">
-                  Storgata 24, 0184 Oslo<br/>Norway, Planet Earth
+                  Ericeira, Portugal<br/>Planet Earth 2640-085
                 </p>
               </div>
               <div className="flex items-start space-x-8">
@@ -64,7 +64,7 @@ const Contact: React.FC = () => {
               </div>
               <div className="flex items-start space-x-8">
                 <Globe size={24} />
-                <p className="text-sm font-mono uppercase font-bold">GMT +1:00</p>
+                <p className="text-sm font-mono uppercase font-bold">GMT +0:00</p>
               </div>
             </div>
           </div>

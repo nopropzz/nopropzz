@@ -2,123 +2,164 @@ import { Project, Post, Event, Talent } from './types';
 
 export const APP_VERSION = '1.4.0';
 
+export interface Product {
+  id: string;
+  name: string;
+  price: number;
+  type: string;
+  category: string;
+  image: string;
+  description: string;
+  story?: string;
+  specs?: string[];
+  availableSizes?: string[];
+}
+
+export const MOCK_PRODUCTS: Product[] = [
+  {
+    id: 'p1',
+    name: 'Nordic Shadow #04',
+    price: 125,
+    type: 'Limited Print',
+    category: 'Prints',
+    image: 'https://images.unsplash.com/photo-1543857778-c4a1a3e0b2eb?auto=format&fit=crop&q=80&w=800',
+    description: 'High-contrast monochrome print on 300gsm raw archival paper. Hand-numbered.',
+    story: 'Captured during a mid-winter expedition to the Lofoten Islands. The shadow cast by the brutalist structure perfectly mirrored the jagged mountain peaks in the distance.',
+    specs: ['300gsm Archival Paper', 'Giclée Fine Art Print', 'Hand-signed & Numbered', 'Limited Edition of 50'],
+    availableSizes: ['A3', 'A2', '50x70cm']
+  },
+  {
+    id: 'p2',
+    name: 'Ericeira Horizon',
+    price: 85,
+    type: 'Gallery Edition',
+    category: 'Prints',
+    image: 'https://images.unsplash.com/photo-1518310383802-640c2de311b2?auto=format&fit=crop&q=80&w=800',
+    description: 'Captured during the Vita Earth campaign drop. Raw, unedited film stock.',
+    story: 'The Atlantic ocean meets the brutalist sea walls of Ericeira. This frame was captured on the final day of the production, using a medium-format vintage Leica.',
+    specs: ['250gsm Silk Finish Paper', 'Digital Offset Print', 'Open Edition', 'Certified Label'],
+    availableSizes: ['A4', 'A3', 'A2']
+  },
+  {
+    id: 'p3',
+    name: 'Brutalist Deck 01',
+    price: 240,
+    type: 'Partner Work',
+    category: 'Paintings',
+    image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=800',
+    description: 'Original acrylic on concrete-textured canvas. A study in architectural tension.'
+  }
+];
+
 export const MOCK_PROJECTS: Project[] = [
   {
-    id: '1',
-    title: 'VITA_ACTIVEWEAR',
-    slug: 'vita-activewear',
-    category: 'Sustainable Fashion',
+    id: 'pr1',
+    title: 'Vita Earth Campaign',
+    slug: 'vita-earth',
+    category: 'Fashion',
     client: 'Vita Earth',
-    year: 2025,
-    description: 'A global campaign production in Ericeira focused on high-performance ethical activewear.',
-    featured_image_url: 'https://images.unsplash.com/photo-1571902943202-507ec2618e8f?auto=format&fit=crop&q=80&w=1975',
+    year: 2024,
+    description: 'A sustainable fashion campaign shot in the raw landscapes of Portugal.',
+    featured_image_url: 'https://images.unsplash.com/photo-1518310383802-640c2de311b2?auto=format&fit=crop&q=80&w=1200',
+    status: 'published',
+    brief: 'Capture the essence of earth-conscious fashion in a brutalist environment.',
+    strategy: 'Utilize monochrome photography to emphasize texture and form.',
+    result: 'Campaign led to a 40% increase in brand engagement.',
     images: [
-      'https://images.unsplash.com/photo-1518310383802-640c2de311b2?auto=format&fit=crop&q=80&w=2070',
-      'https://images.unsplash.com/photo-1483721310020-03333e577078?auto=format&fit=crop&q=80&w=2128'
+      'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&q=80&w=1200'
     ],
-    status: 'published',
-    brief: 'Vita Earth needed to bridge the gap between technical outdoor performance and high-fashion aesthetics while maintaining their 100% recycled commitment.',
-    strategy: 'Our team deployed to Ericeira to capture raw, high-contrast visuals using local athletes. We utilized natural lighting and brutalist architecture to emphasize the structural integrity of the garments.',
-    result: 'The campaign resulted in a 45% increase in pre-orders and a significant shift in brand perception within the Northern European market.',
     testimonial: {
-      quote: "noPROPZZ didn't just take photos; they built a world for our brand that feels impossible to ignore.",
-      author: "Elena S.",
-      role: "Founder, Vita Earth"
+      quote: 'The vision for this shoot was perfectly executed.',
+      author: 'Sarah Chen',
+      role: 'Creative Director'
     }
   },
   {
-    id: '2',
-    title: 'LUMINA_SKINCARE',
-    slug: 'lumina-skincare',
-    category: 'Clean Beauty',
-    client: 'Lumina Organics',
-    year: 2024,
-    description: 'Clean cosmetics campaign leveraging the AI Spark Kit for rapid social assets.',
-    featured_image_url: 'https://images.unsplash.com/photo-1556228578-0d85b1a4d571?auto=format&fit=crop&q=80&w=1974',
-    status: 'published',
-    brief: 'Launch a new product line across 4 countries simultaneously with a limited budget but high quality requirements.',
-    strategy: 'We implemented the AI Spark Kit to generate hyper-realistic campaign environments, reducing travel costs by 70% while maintaining a high-ticket look.',
-    result: 'Successfully launched in 4 territories with 120+ unique assets delivered in under 10 days.',
-    testimonial: {
-      quote: "The efficiency of the Spark Kit allowed us to scale our launch without compromising on the luxury feel we required.",
-      author: "Marcus J.",
-      role: "Head of Digital, Lumina"
-    }
+    id: 'pr2',
+    title: 'Brutal Echoes',
+    slug: 'brutal-echoes',
+    category: 'Architecture',
+    client: 'Stockholm Design Week',
+    year: 2023,
+    description: 'Visual exploration of brutalist architecture in the Nordics.',
+    featured_image_url: 'https://images.unsplash.com/photo-1543857778-c4a1a3e0b2eb?auto=format&fit=crop&q=80&w=1200',
+    status: 'published'
   },
   {
-    id: '3',
-    title: 'ORION_JEWELRY',
-    slug: 'orion-jewelry',
-    category: 'Ethical Goods',
-    client: 'Orion Studio',
+    id: 'pr3',
+    title: 'Sonic Void',
+    slug: 'sonic-void',
+    category: 'Music',
+    client: 'Void Records',
     year: 2024,
-    description: 'Hand-made ethical jewelry story produced in the mountains of Morocco.',
-    featured_image_url: 'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&q=80&w=1974',
-    status: 'published',
-    brief: 'Showcase the intricate, raw beauty of hand-forged silver in a way that resonates with a younger, design-conscious demographic.',
-    strategy: 'We took the production to the Atlas Mountains, using the rugged terrain as a juxtaposition to the delicate jewelry. The narrative focused on the intersection of ancient craft and modern design.',
-    result: 'The story was featured in 3 major design publications and sold out the first limited run within 48 hours.',
-    testimonial: {
-      quote: "They captured the soul of our craft. Every frame feels intentional and heavy with meaning.",
-      author: "Sami A.",
-      role: "Lead Craftsman, Orion Studio"
-    }
+    description: 'Visual identity and cover art for a Stockholm-based techno label.',
+    featured_image_url: 'https://images.unsplash.com/photo-1514525253361-bee8d48700ef?auto=format&fit=crop&q=80&w=1200',
+    status: 'published'
   }
 ];
 
 export const MOCK_POSTS: Post[] = [
   {
-    id: '1',
-    title: 'Real Art in an AI World',
-    slug: 'real-art-ai-world',
-    excerpt: 'Why noPROPZZ prioritizes real-world campaigns before digital expansion.',
-    content: 'In tough times when artists battle fast-changing tools, we create the community we dreamed of...',
-    featured_image_url: 'https://images.unsplash.com/photo-1492691523567-61707d2e5ef4?auto=format&fit=crop&q=80&w=2070',
-    tags: ['Manifesto', 'Theory'],
+    id: 'post1',
+    title: 'The Brutalist Ethos',
+    slug: 'brutalist-ethos',
+    excerpt: 'Exploring the intersection of raw materials and digital storytelling.',
+    content: 'Brutalism in design is more than just raw concrete. It is a philosophy of honesty...',
+    featured_image_url: 'https://images.unsplash.com/photo-1518310383802-640c2de311b2?auto=format&fit=crop&q=80&w=1200',
+    tags: ['Theory', 'Design'],
     status: 'published',
-    published_at: '2025-01-10'
-  }
-];
-
-export const MOCK_TALENT: Talent[] = [
-  {
-    id: '1',
-    name: 'Marleen Muhuste',
-    slug: 'marleen-muhuste',
-    bio: 'Founder & Visual Director. Estonian photographer specialized in high-ticket campaign production.',
-    role: 'Creative',
-    profile_image_url: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=1964',
-    featured: true
-  },
-  {
-    id: '2',
-    name: 'Kätlin Klaus',
-    slug: 'katlin-klaus',
-    bio: 'Founder & Production Director. Orchestrating global shoots for sustainable brands.',
-    role: 'Creative',
-    profile_image_url: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&q=80&w=2070',
-    featured: true
-  },
-  {
-    id: '3',
-    name: 'Jürgen S.',
-    slug: 'jurgen-s',
-    bio: 'The Orchestrator. Designing the digital landscape and systems for the agency.',
-    role: 'Creative',
-    profile_image_url: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=1974',
-    featured: true
+    published_at: '2024-03-15'
   }
 ];
 
 export const MOCK_EVENTS: Event[] = [
   {
-    id: '1',
-    name: 'Morocco Drop Q3',
-    description: '2 Brands. 5 Days. Unrivaled production in the Atlas Mountains.',
-    event_type: 'Production Drop',
-    start_date: '2025-09-15T09:00:00',
-    location: 'Marrakech, Morocco',
-    featured_image_url: 'https://images.unsplash.com/photo-1489749798305-4fea3ae63d43?auto=format&fit=crop&q=80&w=2067',
+    id: 'ev1',
+    name: 'Concrete Pulse',
+    description: 'An immersive exhibition of Scandinavian brutalism.',
+    event_type: 'Exhibition',
+    start_date: '2026-05-20',
+    location: 'Oslo, Norway',
+    featured_image_url: 'https://images.unsplash.com/photo-1543857778-c4a1a3e0b2eb?auto=format&fit=crop&q=80&w=800',
     status: 'upcoming'
+  }
+];
+
+export const MOCK_TALENT: Talent[] = [
+  {
+    id: 't1',
+    name: 'Marleen Muhuste',
+    slug: 'marleen-muhuste',
+    bio: 'Lead photographer and founder of noPROPZZ. Scandinavian visual storyteller.',
+    role: 'Artist',
+    profile_image_url: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=800',
+    featured: true
+  },
+  {
+    id: 't2',
+    name: 'Kätlin Klaus',
+    slug: 'katlin-klaus',
+    bio: 'Visual artist and orchestrator. Co-founder specializing in structural soul.',
+    role: 'Artist',
+    profile_image_url: 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&q=80&w=800',
+    featured: true
+  },
+  {
+    id: 't4',
+    name: 'Anastasiia Liundrynska',
+    slug: 'anastasiia-liundrynska',
+    bio: 'Editorial talent focused on sculptural silhouettes and avant-garde lace-up minimalism. Expert in architectural posing and high-fidelity sculptural aesthetics.',
+    role: 'Model',
+    profile_image_url: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&q=80&w=800',
+    featured: true
+  },
+  {
+    id: 't5',
+    name: 'Sonya Christina Tomson',
+    slug: 'sonya-christina-tomson',
+    bio: 'High-performance editorial model specializing in punk-inflected luxury and structural movement. Known for the safety-pin blazer series and high-contrast industrial aesthetics.',
+    role: 'Model',
+    profile_image_url: 'https://images.unsplash.com/photo-1502323777036-f29e3972d82f?auto=format&fit=crop&q=80&w=800',
+    featured: true
   }
 ];

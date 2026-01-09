@@ -24,7 +24,7 @@ const Hero: React.FC = () => {
         >
           <Editable 
             id="hero_tagline" 
-            defaultText="NORDIC BRUTALISM & DIGITAL ARTS // LEAD BY MARLEEN & KÄTLIN // ORCHESTRATED BY JÜRGEN" 
+            defaultText="Art Studio / Scandinavian Creative Agency / Artist Community" 
           />
         </motion.p>
         
@@ -55,12 +55,11 @@ const Hero: React.FC = () => {
       {/* Hero Footer Meta - Improved scaling for mobile devices */}
       <div className="absolute bottom-8 left-0 w-full px-8 flex flex-col md:flex-row justify-between items-center md:items-end gap-6 md:gap-0">
         <div className="text-[8px] md:text-[10px] font-mono uppercase tracking-[0.2em] space-y-1.5 font-bold text-center md:text-left opacity-30">
-          <p>LOCATION: <Editable id="hero_loc" defaultText="59.9139° N, 10.7522° E" /></p>
-          <p>SECTOR: <Editable id="hero_sector" defaultText="SUSTAINABLE_LIFESTYLES" /></p>
+          <p>LOCATION: <Editable id="hero_loc" defaultText="38.9681° N, 9.4073° W" /></p>
+          <p>SECTOR: <Editable id="hero_sector" defaultText="VISUAL STORYTELLING" /></p>
         </div>
         <div className="text-[8px] md:text-[10px] font-mono uppercase tracking-[0.2em] text-center md:text-right font-bold opacity-30">
-          <p>STATUS: <Editable id="hero_status" defaultText="PRODUCTION_ACTIVE" /></p>
-          <p>POWERED BY FLOWEN AI OS</p>
+          <p>STATUS: <Editable id="hero_status" defaultText="AVAILABLE WORLDWIDE" /></p>
         </div>
       </div>
     </section>

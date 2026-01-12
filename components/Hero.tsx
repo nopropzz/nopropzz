@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import { Editable } from './VisualEditor';
 
 const Hero: React.FC = () => {
@@ -43,12 +44,18 @@ const Hero: React.FC = () => {
           transition={{ delay: 0.4 }}
           className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto"
         >
-          <button className="w-full sm:w-64 px-8 py-5 md:py-8 bg-black text-white text-[11px] md:text-base font-black uppercase tracking-widest border-4 border-black transition-all brutalist-shadow active:translate-y-1">
+          <Link 
+            to="/portfolio"
+            className="w-full sm:w-64 px-8 py-5 md:py-8 bg-black text-white text-[11px] md:text-base font-black uppercase tracking-widest border-4 border-black transition-all brutalist-shadow active:translate-y-1 text-center"
+          >
             <Editable id="hero_btn_1" defaultText="View Work" />
-          </button>
-          <button className="w-full sm:w-64 px-8 py-5 md:py-8 bg-white text-black text-[11px] md:text-base font-black uppercase tracking-widest border-4 border-black transition-all hover:bg-black hover:text-white active:translate-y-1">
+          </Link>
+          <Link 
+            to="/services"
+            className="w-full sm:w-64 px-8 py-5 md:py-8 bg-white text-black text-[11px] md:text-base font-black uppercase tracking-widest border-4 border-black transition-all hover:bg-black hover:text-white active:translate-y-1 text-center"
+          >
             <Editable id="hero_btn_2" defaultText="Our Offers" />
-          </button>
+          </Link>
         </motion.div>
       </div>
 

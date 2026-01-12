@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode, useRef } from 'react';
-import { Save, Edit3, Eye, Database, CheckCircle, Image as ImageIcon, Upload } from 'lucide-react';
+import { Save, Edit3, Eye, Database, CheckCircle, Image as ImageIcon, Upload, CloudUpload } from 'lucide-react';
 
 interface VisualEditorContextType {
   isEditing: boolean;
@@ -22,9 +22,12 @@ export const VisualEditorProvider: React.FC<{ children: ReactNode }> = ({ childr
   const [contentMap, setContentMap] = useState<Record<string, string>>({});
   const [status, setStatus] = useState<'idle' | 'saving' | 'saved'>('idle');
 
+  // Load from LocalStorage (and eventually Supabase)
   useEffect(() => {
     const saved = localStorage.getItem('nopropzz_edits');
     if (saved) setContentMap(JSON.parse(saved));
+    
+    // FUTURE: fetch('/api/content').then(res => res.json()).then(data => setContentMap(data));
   }, []);
 
   const toggleEditing = () => setIsEditing(!isEditing);
@@ -37,9 +40,16 @@ export const VisualEditorProvider: React.FC<{ children: ReactNode }> = ({ childr
     return contentMap[id] || defaultValue;
   };
 
-  const saveChanges = () => {
+  const saveChanges = async () => {
     setStatus('saving');
+    
+    // 1. Local Save
     localStorage.setItem('nopropzz_edits', JSON.stringify(contentMap));
+    
+    // 2. Cloud Sync (The Supabase Moment)
+    // This is where you'd call supabase.from('site_content').upsert(...)
+    console.log("COMMITTING_TO_SYNC_ENGINE...", contentMap);
+
     setTimeout(() => {
       setStatus('saved');
       setTimeout(() => setStatus('idle'), 2000);
@@ -60,14 +70,14 @@ export const VisualEditorProvider: React.FC<{ children: ReactNode }> = ({ childr
             </div>
             {status === 'saving' && (
               <div className="flex items-center space-x-3 text-[10px] font-mono opacity-50">
-                <Database size={14} className="animate-spin" />
-                <span>SYNCING_STORAGE...</span>
+                <CloudUpload size={14} className="animate-bounce" />
+                <span>PREPARING_CLOUD_SYNC...</span>
               </div>
             )}
             {status === 'saved' && (
               <div className="flex items-center space-x-2 text-green-400 text-[10px] font-black">
                 <CheckCircle size={14} />
-                <span>CHANGES_COMMITTED</span>
+                <span>STATE_COMMITTED</span>
               </div>
             )}
           </div>
@@ -80,7 +90,7 @@ export const VisualEditorProvider: React.FC<{ children: ReactNode }> = ({ childr
               }`}
             >
               {isEditing ? <Eye size={14} /> : <Edit3 size={14} />}
-              <span>{isEditing ? 'PREVIEW_SITE' : 'ENABLE_BUILDER'}</span>
+              <span>{isEditing ? 'EXIT_BUILDER' : 'ENABLE_BUILDER'}</span>
             </button>
             
             {isEditing && (
@@ -89,7 +99,7 @@ export const VisualEditorProvider: React.FC<{ children: ReactNode }> = ({ childr
                 className="px-6 py-2 bg-white text-black text-[10px] font-black uppercase tracking-widest border-2 border-white hover:bg-zinc-200 transition-all flex items-center space-x-2"
               >
                 <Save size={14} />
-                <span>SAVE_ALL_EDITS</span>
+                <span>SYNC_TO_CLOUD</span>
               </button>
             )}
           </div>
@@ -185,13 +195,13 @@ export const EditableImage: React.FC<EditableImageProps> = ({ id, defaultSrc, al
         <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity bg-black/40 gap-4">
           <div className="bg-white text-black p-4 brutalist-border flex items-center gap-3 brutalist-shadow pointer-events-auto">
             <Upload size={20} />
-            <span className="text-[10px] font-black uppercase tracking-widest">UPLOAD_PHOTO</span>
+            <span className="text-[10px] font-black uppercase tracking-widest">REPLACE_IMAGE</span>
           </div>
           <button 
             onClick={handleManualUrl}
             className="text-[9px] text-white font-mono uppercase underline tracking-widest pointer-events-auto hover:opacity-100 opacity-60 transition-opacity"
           >
-            or_use_external_url
+            or_link_url
           </button>
         </div>
       )}

@@ -1,34 +1,55 @@
+
 import React, { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { MOCK_PRODUCTS } from '../constants';
 import { useCart } from '../components/CartContext';
 import { ArrowLeft, ShoppingBag, ShieldCheck, Truck, RefreshCcw } from 'lucide-react';
+import { Editable, EditableImage, useVisualEditor } from '../components/VisualEditor';
 
 const ShopDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const product = MOCK_PRODUCTS.find(p => p.id === id);
   const { addToCart } = useCart();
+  const { getContent, isEditing } = useVisualEditor();
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
 
-  if (!product) {
+  // Resolution Logic: Check mock products first, then content map for dynamic ones
+  let product = MOCK_PRODUCTS.find(p => p.id === id);
+  
+  const currentName = getContent(`shop_name_${id}`, product?.name || 'New Product');
+  const currentPrice = getContent(`shop_price_${id}`, product?.price.toString() || '0');
+  const currentType = getContent(`shop_type_${id}`, product?.type || 'Artist Drop');
+  const currentImage = getContent(`shop_img_${id}`, product?.image || '');
+  const currentDesc = getContent(`shop_desc_${id}`, product?.description || 'No description provided.');
+  const currentStory = getContent(`shop_story_${id}`, product?.story || "This piece represents a specific moment in the noPropzz journey, captured during global production drops where real human connection meets the raw brutalist environment.");
+  
+  // Technical Specs handle as a multi-line string in the editor
+  const defaultSpecs = product?.specs?.join('\n') || 'Archival Paper\nHand Signed\nCertified Release';
+  const currentSpecsRaw = getContent(`shop_specs_${id}`, defaultSpecs);
+  const currentSpecs = currentSpecsRaw.split('\n').filter(s => s.trim().length > 0);
+
+  // If it's a dynamic product and no default data exists, we need a base object
+  if (!product && currentName === 'New Product' && !id?.startsWith('shop_dyn')) {
     return (
       <div className="min-h-[60vh] flex flex-col items-center justify-center">
-        <h2 className="text-4xl font-black uppercase">Product_Not_Found</h2>
+        <h2 className="text-4xl font-black uppercase tracking-tighter">Product_Not_Found</h2>
         <Link to="/shop" className="mt-8 underline font-black uppercase tracking-widest">Return to Shop</Link>
       </div>
     );
   }
 
   const handleAddToCart = () => {
-    if (product.availableSizes && !selectedSize) {
+    if (product?.availableSizes && !selectedSize) {
       alert('Please select a size before adding to bag.');
       return;
     }
     addToCart({ 
-      ...product, 
-      quantity: 1, 
-      name: `${product.name}${selectedSize ? ` (${selectedSize})` : ''}` 
+      id: id || 'unknown',
+      name: `${currentName}${selectedSize ? ` (${selectedSize})` : ''}`,
+      price: parseInt(currentPrice),
+      image: currentImage,
+      type: currentType,
+      quantity: 1
     });
   };
 
@@ -47,9 +68,10 @@ const ShopDetail: React.FC = () => {
             animate={{ opacity: 1, x: 0 }}
             className="border-4 border-black brutalist-shadow bg-zinc-100 aspect-[4/5] overflow-hidden sticky top-32"
           >
-            <img 
-              src={product.image} 
-              alt={product.name} 
+            <EditableImage 
+              id={`shop_img_${id}`}
+              defaultSrc={product?.image || 'https://images.unsplash.com/photo-1543857778-c4a1a3e0b2eb?auto=format&fit=crop&q=80&w=1200'} 
+              alt={currentName} 
               className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-1000"
             />
           </motion.div>
@@ -58,16 +80,22 @@ const ShopDetail: React.FC = () => {
         {/* Right: Product Interaction */}
         <div className="lg:col-span-5 space-y-12">
           <header>
-            <span className="text-xs font-black uppercase tracking-[0.4em] opacity-30 block mb-4">{product.type}</span>
-            <h1 className="text-5xl md:text-7xl font-black uppercase tracking-tighter leading-none mb-6 italic">{product.name}</h1>
-            <p className="text-4xl font-black tracking-tight mb-8">€{product.price}</p>
-            <p className="text-lg font-mono font-bold leading-relaxed opacity-70 uppercase border-l-4 border-black pl-8">
-              {product.description}
+            <span className="text-xs font-black uppercase tracking-[0.4em] opacity-30 block mb-4">
+              <Editable id={`shop_type_${id}`} defaultText={product?.type || 'Artist Drop'} />
+            </span>
+            <h1 className="text-5xl md:text-7xl font-black uppercase tracking-tighter leading-none mb-6 italic">
+              <Editable id={`shop_name_${id}`} defaultText={product?.name || 'New Product'} />
+            </h1>
+            <p className="text-4xl font-black tracking-tight mb-8">
+              €<Editable id={`shop_price_${id}`} defaultText={product?.price.toString() || '0'} />
             </p>
+            <div className="text-lg font-mono font-bold leading-relaxed opacity-70 border-l-4 border-black pl-8 uppercase whitespace-pre-wrap">
+              <Editable id={`shop_desc_${id}`} defaultText={product?.description || 'No description provided.'} />
+            </div>
           </header>
 
           {/* Size Matrix */}
-          {product.availableSizes && (
+          {product?.availableSizes && (
             <div className="space-y-6">
               <h4 className="text-[10px] font-black uppercase tracking-widest opacity-40">SELECT_MATRIX_DIMENSIONS</h4>
               <div className="grid grid-cols-3 gap-4">
@@ -95,44 +123,61 @@ const ShopDetail: React.FC = () => {
               <ShoppingBag size={24} className="group-hover:rotate-12 transition-transform" />
             </button>
             <p className="text-[9px] font-mono text-center opacity-30 font-bold tracking-widest uppercase italic">
-              Production status: verified / shipping global
+              Production status: <Editable id={`shop_status_${id}`} defaultText="verified / shipping global" />
             </p>
           </div>
 
           {/* Art Story */}
           <section className="pt-12 border-t-4 border-black space-y-8">
-            <h3 className="text-xl font-black uppercase tracking-tighter italic underline underline-offset-8 decoration-4">The_Story_of_the_Piece</h3>
-            <p className="text-base font-mono font-bold leading-relaxed opacity-70 uppercase">
-              {product.story || "This piece represents a specific moment in the noPropzz journey, captured during global production drops where real human connection meets the raw brutalist environment."}
-            </p>
+            <h3 className="text-xl font-black uppercase tracking-tighter italic underline underline-offset-8 decoration-4">
+              <Editable id={`shop_story_header_${id}`} defaultText="The_Story_of_the_Piece" />
+            </h3>
+            <div className="text-base font-mono font-bold leading-relaxed opacity-70 uppercase whitespace-pre-wrap">
+              <Editable 
+                id={`shop_story_${id}`} 
+                as="div"
+                defaultText={product?.story || "This piece represents a specific moment in the noPropzz journey, captured during global production drops where real human connection meets the raw brutalist environment."} 
+              />
+            </div>
           </section>
 
           {/* Technical Specs */}
           <section className="pt-12 border-t-4 border-black space-y-8">
-            <h3 className="text-xl font-black uppercase tracking-tighter">Technical_Specifications</h3>
-            <ul className="grid grid-cols-1 gap-4">
-              {product.specs?.map((spec, idx) => (
-                <li key={idx} className="flex items-center space-x-4 text-[11px] font-black uppercase tracking-widest border-b border-black/5 pb-2">
-                  <div className="w-1.5 h-1.5 bg-black" />
-                  <span>{spec}</span>
-                </li>
-              ))}
-            </ul>
+            <h3 className="text-xl font-black uppercase tracking-tighter">
+              <Editable id={`shop_specs_header_${id}`} defaultText="Technical_Specifications" />
+            </h3>
+            <div className="grid grid-cols-1 gap-4">
+              {isEditing ? (
+                 <div className="border-2 border-dashed border-black/20 p-4">
+                   <p className="text-[10px] font-black uppercase opacity-30 mb-2 font-mono">Edit specs (One per line):</p>
+                   <Editable id={`shop_specs_${id}`} defaultText={defaultSpecs} className="text-xs font-mono font-bold" />
+                 </div>
+              ) : (
+                <ul className="grid grid-cols-1 gap-4">
+                  {currentSpecs.map((spec, idx) => (
+                    <li key={idx} className="flex items-center space-x-4 text-[11px] font-black uppercase tracking-widest border-b border-black/5 pb-2">
+                      <div className="w-1.5 h-1.5 bg-black" />
+                      <span>{spec}</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
           </section>
 
           {/* Trust Flags */}
-          <div className="grid grid-cols-3 gap-4 pt-12">
-            <div className="flex flex-col items-center text-center space-y-3 opacity-40 hover:opacity-100 transition-opacity">
-              <ShieldCheck size={24} />
-              <span className="text-[8px] font-black uppercase tracking-widest">Museum_Grade</span>
-            </div>
+          <div className="grid grid-cols-2 gap-4 pt-12">
             <div className="flex flex-col items-center text-center space-y-3 opacity-40 hover:opacity-100 transition-opacity">
               <Truck size={24} />
-              <span className="text-[8px] font-black uppercase tracking-widest">Global_Transit</span>
+              <span className="text-[8px] font-black uppercase tracking-widest">
+                <Editable id={`shop_flag_1_${id}`} defaultText="Global_Transit" />
+              </span>
             </div>
             <div className="flex flex-col items-center text-center space-y-3 opacity-40 hover:opacity-100 transition-opacity">
               <RefreshCcw size={24} />
-              <span className="text-[8px] font-black uppercase tracking-widest">Verified_Drop</span>
+              <span className="text-[8px] font-black uppercase tracking-widest">
+                <Editable id={`shop_flag_2_${id}`} defaultText="Verified_Drop" />
+              </span>
             </div>
           </div>
         </div>

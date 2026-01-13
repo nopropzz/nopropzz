@@ -1,4 +1,6 @@
+
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { useVisualEditor } from './VisualEditor';
 
 export interface CartItem {
   id: string;
@@ -32,6 +34,7 @@ export const useCart = () => {
 export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [isCartOpen, setCartOpen] = useState(false);
+  const { showToast } = useVisualEditor();
 
   useEffect(() => {
     const saved = localStorage.getItem('np_cart');
@@ -51,6 +54,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       return [...prev, { ...item, quantity: 1 }];
     });
     setCartOpen(true);
+    showToast(`${item.name.toUpperCase()} ADDED_TO_BAG`, 'success');
   };
 
   const removeFromCart = (id: string) => {

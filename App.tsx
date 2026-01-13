@@ -1,7 +1,10 @@
+
 import React, { useState, useEffect } from 'react';
 import { HashRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Layout from './components/Layout';
 import AdminLayout from './components/AdminLayout';
+import ScrollToTop from './components/ScrollToTop';
+import { supabase } from './lib/supabase';
 
 // Providers
 import { CartProvider } from './components/CartContext';
@@ -33,28 +36,68 @@ import AdminPosts from './pages/Admin/Posts';
 import { AuthState } from './types';
 
 const App: React.FC = () => {
-  const [auth, setAuth] = useState<AuthState>(() => {
-    const saved = localStorage.getItem('np_auth');
-    return saved ? JSON.parse(saved) : { isAuthenticated: false, user: null };
-  });
+  const [auth, setAuth] = useState<AuthState>({ isAuthenticated: false, user: null });
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    localStorage.setItem('np_auth', JSON.stringify(auth));
-  }, [auth]);
+    if (!supabase) {
+      setLoading(false);
+      return;
+    }
 
-  const login = () => {
-    setAuth({
-      isAuthenticated: true,
-      user: { name: 'Admin User', email: 'admin@nopropzz.com', role: 'admin' }
+    // Check active sessions
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session) {
+        setAuth({
+          isAuthenticated: true,
+          user: { 
+            name: session.user.email?.split('@')[0] || 'Admin', 
+            email: session.user.email || '', 
+            role: 'admin' 
+          }
+        });
+      }
+      setLoading(false);
     });
-  };
 
-  const logout = () => {
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (session) {
+        setAuth({
+          isAuthenticated: true,
+          user: { 
+            name: session.user.email?.split('@')[0] || 'Admin', 
+            email: session.user.email || '', 
+            role: 'admin' 
+          }
+        });
+      } else {
+        setAuth({ isAuthenticated: false, user: null });
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const logout = async () => {
+    if (supabase) await supabase.auth.signOut();
     setAuth({ isAuthenticated: false, user: null });
   };
 
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="flex flex-col items-center space-y-4">
+          <div className="w-12 h-12 border-4 border-black border-t-transparent animate-spin" />
+          <p className="text-[10px] font-black uppercase tracking-[0.4em]">INIT_SYSTEM...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <Router>
+      <ScrollToTop />
       <CartProvider>
         <Routes>
           {/* Public Routes */}
@@ -70,9 +113,6 @@ const App: React.FC = () => {
           <Route path="/events" element={<Layout><Events /></Layout>} />
           <Route path="/talent" element={<Layout><TalentPage /></Layout>} />
           <Route path="/talent/:slug" element={<Layout><TalentDetail /></Layout>} />
-          {/* Legacy redirects for compatibility */}
-          <Route path="/models" element={<Navigate to="/talent" replace />} />
-          <Route path="/artists" element={<Navigate to="/talent" replace />} />
           <Route path="/locations" element={<Layout><Locations /></Layout>} />
           <Route path="/about" element={<Layout><About /></Layout>} />
           <Route path="/contact" element={<Layout><Contact /></Layout>} />
@@ -80,7 +120,7 @@ const App: React.FC = () => {
           {/* Admin Routes */}
           <Route 
             path="/admin/login" 
-            element={!auth.isAuthenticated ? <AdminLogin onLogin={login} /> : <Navigate to="/admin/dashboard" />} 
+            element={!auth.isAuthenticated ? <AdminLogin /> : <Navigate to="/admin/dashboard" />} 
           />
           
           <Route 

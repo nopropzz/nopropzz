@@ -1,12 +1,15 @@
+
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { ShoppingBag } from 'lucide-react';
 import { useCart } from './CartContext';
+import { Editable, useVisualEditor } from './VisualEditor';
 
 const Navigation: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
   const { totalItems, setCartOpen } = useCart();
+  const { isEditing, showToast } = useVisualEditor();
 
   const navLinks = [
     { name: 'Portfolio', path: '/portfolio' },
@@ -20,10 +23,23 @@ const Navigation: React.FC = () => {
 
   const isActive = (path: string) => location.pathname === path;
 
+  const handleLinkClick = (e: React.MouseEvent, path: string) => {
+    if (isEditing) {
+      if (!e.altKey) {
+        e.preventDefault();
+        showToast('NAVIGATION_LOCKED: HOLD_ALT_TO_JUMP', 'info');
+      }
+    }
+  };
+
   return (
     <nav className="fixed top-0 left-0 w-full z-50 bg-white border-b-4 border-black">
       <div className="max-w-[1440px] mx-auto px-6 md:px-10 h-20 md:h-24 flex items-center justify-between">
-        <Link to="/" className="text-xl md:text-3xl font-black tracking-tighter normal-case">
+        <Link 
+          to={isEditing ? '#' : "/"} 
+          onClick={(e) => handleLinkClick(e, '/')} 
+          className="text-xl md:text-3xl font-black tracking-tighter normal-case"
+        >
           noPROPZZ<span className="text-[10px] ml-0.5 font-bold tracking-normal align-top">©</span>
         </Link>
 
@@ -32,18 +48,19 @@ const Navigation: React.FC = () => {
           {navLinks.map((link) => (
             <Link
               key={link.name}
-              to={link.path}
+              to={isEditing ? '#' : link.path}
+              onClick={(e) => handleLinkClick(e, link.path)}
               className={`text-sm uppercase tracking-tighter font-black hover:line-through transition-all ${
                 isActive(link.path) ? 'line-through' : ''
               }`}
             >
-              {link.name}
+              <Editable id={`nav_${link.name.toLowerCase()}`} defaultText={link.name} />
             </Link>
           ))}
           
           <div className="flex items-center space-x-6">
             <button 
-              onClick={() => setCartOpen(true)}
+              onClick={() => !isEditing && setCartOpen(true)}
               className="relative p-2 hover:bg-zinc-100 transition-all border-2 border-transparent hover:border-black"
             >
               <ShoppingBag size={24} strokeWidth={2.5} />
@@ -54,10 +71,11 @@ const Navigation: React.FC = () => {
               )}
             </button>
             <Link
-              to="/contact"
+              to={isEditing ? '#' : "/contact"}
+              onClick={(e) => handleLinkClick(e, '/contact')}
               className="px-8 py-4 border-4 border-black text-xs font-black uppercase tracking-widest bg-black text-white hover:bg-transparent hover:text-black transition-all brutalist-shadow"
             >
-              Start Project
+              <Editable id="nav_cta_text" defaultText="Start Project" />
             </Link>
           </div>
         </div>
@@ -65,7 +83,7 @@ const Navigation: React.FC = () => {
         {/* Sleek Mobile Toggle */}
         <div className="flex items-center space-x-4 lg:hidden">
           <button 
-            onClick={() => setCartOpen(true)}
+            onClick={() => !isEditing && setCartOpen(true)}
             className="relative p-2"
           >
             <ShoppingBag size={20} strokeWidth={2.5} />
@@ -102,19 +120,37 @@ const Navigation: React.FC = () => {
             {navLinks.map((link) => (
               <Link
                 key={link.name}
-                to={link.path}
-                onClick={() => setIsOpen(false)}
+                to={isEditing ? '#' : link.path}
+                onClick={(e) => {
+                  if (isEditing) {
+                    if (!e.altKey) {
+                      e.preventDefault();
+                      showToast('NAVIGATION_LOCKED: HOLD_ALT_TO_JUMP', 'info');
+                    }
+                  } else {
+                    setIsOpen(false);
+                  }
+                }}
                 className="block text-4xl md:text-7xl font-black uppercase tracking-tighter hover:italic transition-all leading-none"
               >
-                {link.name}
+                <Editable id={`nav_mobile_${link.name.toLowerCase()}`} defaultText={link.name} />
               </Link>
             ))}
             <Link
-              to="/contact"
-              onClick={() => setIsOpen(false)}
+              to={isEditing ? '#' : "/contact"}
+              onClick={(e) => {
+                if (isEditing) {
+                  if (!e.altKey) {
+                    e.preventDefault();
+                    showToast('NAVIGATION_LOCKED: HOLD_ALT_TO_JUMP', 'info');
+                  }
+                } else {
+                  setIsOpen(false);
+                }
+              }}
               className="block text-4xl md:text-7xl font-black uppercase tracking-tighter text-zinc-300 hover:text-black transition-all leading-none"
             >
-              Inquire
+              <Editable id="nav_mobile_inquire" defaultText="Inquire" />
             </Link>
           </div>
           

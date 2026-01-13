@@ -53,7 +53,7 @@ export interface Talent {
   name: string;
   slug: string;
   bio: string;
-  role: 'Model' | 'Artist' | 'Creative';
+  role: 'Artist' | 'Creative' | 'Talent';
   profile_image_url: string;
   featured: boolean;
 }

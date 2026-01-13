@@ -1,3 +1,4 @@
+
 import { Project, Post, Event, Talent } from './types';
 
 export const APP_VERSION = '1.4.0';
@@ -18,36 +19,51 @@ export interface Product {
 export const MOCK_PRODUCTS: Product[] = [
   {
     id: 'p1',
-    name: 'Nordic Shadow #04',
+    name: 'GANGSTA',
     price: 125,
     type: 'Limited Print',
     category: 'Prints',
     image: 'https://images.unsplash.com/photo-1543857778-c4a1a3e0b2eb?auto=format&fit=crop&q=80&w=800',
     description: 'High-contrast monochrome print on 300gsm raw archival paper. Hand-numbered.',
-    story: 'Captured during a mid-winter expedition to the Lofoten Islands. The shadow cast by the brutalist structure perfectly mirrored the jagged mountain peaks in the distance.',
+    story: 'Captured during a mid-winter expedition in the Nordic wilderness. The shadow cast by the brutalist structure perfectly mirrored the jagged mountain peaks in the distance, creating a moment of absolute structural symmetry.',
     specs: ['300gsm Archival Paper', 'Giclée Fine Art Print', 'Hand-signed & Numbered', 'Limited Edition of 50'],
     availableSizes: ['A3', 'A2', '50x70cm']
   },
   {
     id: 'p2',
-    name: 'Ericeira Horizon',
+    name: 'REAL SUGAR',
     price: 85,
     type: 'Gallery Edition',
     category: 'Prints',
     image: 'https://images.unsplash.com/photo-1518310383802-640c2de311b2?auto=format&fit=crop&q=80&w=800',
     description: 'Captured during the Vita Earth campaign drop. Raw, unedited film stock.',
-    story: 'The Atlantic ocean meets the brutalist sea walls of Ericeira. This frame was captured on the final day of the production, using a medium-format vintage Leica.',
+    story: 'The Atlantic ocean meets the brutalist sea walls of Ericeira. This frame was captured on the final day of the production, as the sun broke through a week of heavy fog, illuminating the textures of the concrete against the salt spray.',
     specs: ['250gsm Silk Finish Paper', 'Digital Offset Print', 'Open Edition', 'Certified Label'],
     availableSizes: ['A4', 'A3', 'A2']
   },
   {
+    id: 'p5',
+    name: 'ACT NORMAL',
+    price: 150,
+    type: 'Limited Print',
+    category: 'Prints',
+    image: 'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&q=80&w=800',
+    description: 'Original study in architectural tension and human silhouette.',
+    story: 'A moment of intentional stillness in an otherwise chaotic urban environment. The subject blends into the hard concrete lines of the city, posing the question: where does the architecture end and the human begin?',
+    specs: ['Premium Archival Paper', 'Certified Release', 'Hand Signed', 'Limited Edition of 25'],
+    availableSizes: ['A3', 'A2']
+  },
+  {
     id: 'p3',
-    name: 'Brutalist Deck 01',
+    name: 'BRUTAL_DECK_01',
     price: 240,
     type: 'Partner Work',
     category: 'Paintings',
     image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=800',
-    description: 'Original acrylic on concrete-textured canvas. A study in architectural tension.'
+    description: 'Original acrylic on concrete-textured canvas. A study in architectural tension.',
+    story: 'The first piece in a series exploring the heavy presence of Soviet-era architecture. Each layer of paint was applied to mimic the weathering of raw concrete over decades.',
+    specs: ['Acrylic on Canvas', 'Custom Concrete Texture', 'Original Work (1/1)', 'Solid Wood Floating Frame'],
+    availableSizes: ['60x90cm']
   }
 ];
 
@@ -148,17 +164,17 @@ export const MOCK_TALENT: Talent[] = [
     id: 't4',
     name: 'Anastasiia Liundrynska',
     slug: 'anastasiia-liundrynska',
-    bio: 'Editorial talent focused on sculptural silhouettes and avant-garde lace-up minimalism. Expert in architectural posing and high-fidelity sculptural aesthetics.',
-    role: 'Model',
-    profile_image_url: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&q=80&w=800',
+    bio: 'Editorial talent focused on sculptural silhouettes and high-fidelity aesthetics.',
+    role: 'Talent',
+    profile_image_url: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&q=80&w=1200',
     featured: true
   },
   {
     id: 't5',
     name: 'Sonya Christina Tomson',
     slug: 'sonya-christina-tomson',
-    bio: 'High-performance editorial model specializing in punk-inflected luxury and structural movement. Known for the safety-pin blazer series and high-contrast industrial aesthetics.',
-    role: 'Model',
+    bio: 'High-performance editorial talent specializing in punk-inflected luxury and structural movement.',
+    role: 'Talent',
     profile_image_url: 'https://images.unsplash.com/photo-1502323777036-f29e3972d82f?auto=format&fit=crop&q=80&w=800',
     featured: true
   }

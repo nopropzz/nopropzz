@@ -166,7 +166,7 @@ export const MOCK_TALENT: Talent[] = [
     slug: 'anastasiia-liundrynska',
     bio: 'Editorial talent focused on sculptural silhouettes and high-fidelity aesthetics.',
     role: 'Talent',
-    profile_image_url: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&q=80&w=1200',
+    profile_image_url: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&q=80&w=800',
     featured: true
   },
   {
